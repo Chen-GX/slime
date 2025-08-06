@@ -144,8 +144,6 @@ def all_gather_with_cp(tensor: torch.Tensor, total_length: int, response_length:
         full_tensor = torch.cat([left, chunk_0, mid, right], dim=0)
 
     assert full_tensor.shape[0] == response_length, f"Expected {response_length}, got {full_tensor.shape}"
-
-    full_tensor = torch.cat([zero(left), chunk_0, zero(mid), chunk_1, zero(right)], dim=0)
     full_tensor = dist.nn.all_reduce(full_tensor, group=cp_group)
     return full_tensor
 
